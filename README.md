@@ -18,7 +18,7 @@
 ### Sync dependencies
 ```
 $ cd src/vending-machine
-$ go mod tody
+$ go mod tidy
 ```
 
 ### Run program
