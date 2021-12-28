@@ -151,7 +151,7 @@ func DecreaseStock(buyedProducts map[Product]int8) error {
 func PrintBoughtProduct(boughtProducts map[Product]int8) {
 	fmt.Printf("You've bought\n")
 	for product, value := range boughtProducts {
-		fmt.Printf("%+v price %+v for %+v piece", product.Name, product.Price, value)
+		fmt.Printf("%+v price %+v THB for %+v piece", product.Name, product.Price, value)
 		if value > 1 {
 			fmt.Println("s")
 		} else {

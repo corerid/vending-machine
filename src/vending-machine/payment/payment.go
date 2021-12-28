@@ -91,7 +91,7 @@ func receivePayment(totalProductAmount int64, userInputList ...*os.File) (int64,
 
 	//loop until user pay more than total product's amount
 	for paymentAmount < totalProductAmount {
-		fmt.Println("\nTotal amount left: ", totalProductAmount-paymentAmount)
+		fmt.Println("\nTotal amount left: ", totalProductAmount-paymentAmount, "THB")
 		fmt.Printf("Please select money to insert (1, 5, 10): ")
 
 		var selectedCoin string
@@ -184,7 +184,7 @@ func Summary(buyedProducts map[product.Product]int8, totalAmount int64, receiveM
 	fmt.Println("------------ Summary ------------")
 	//Product details bought by the customer
 	product.PrintBoughtProduct(buyedProducts)
-	fmt.Println("total price: ", totalAmount)
+	fmt.Println("total price: ", totalAmount, "THB")
 
 	if isSuccessful {
 		//User payment detail
