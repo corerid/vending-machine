@@ -87,7 +87,7 @@ func SelectProduct(userInput *os.File) (map[Product]int8, int64, error) {
 			continue
 		}
 
-		//accumate the price of the product selected by user
+		//accumulate the price of the product selected by user
 		totalAmount = totalAmount + product.Price
 
 		//map buyedProducts for count the same product
