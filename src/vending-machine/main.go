@@ -17,23 +17,23 @@ func main() {
 		money.ListAvailableMoney()
 
 		//user select product
-		buyedProducts, totalAmount, err := product.SelectProduct(nil)
+		boughtProducts, totalAmount, err := product.SelectProduct(nil)
 		if err != nil {
 			fmt.Print("error: ", err)
 			return
 		}
 
 		//do payment process
-		recievedMoney, changeList, isSuccessful, err := payment.Payment(totalAmount, buyedProducts)
+		receivedMoney, changeList, isSuccessful, err := payment.Payment(totalAmount, boughtProducts)
 		if err != nil {
 			fmt.Print("error: ", err)
 			return
 		}
 
 		//purchase summary
-		payment.Summary(buyedProducts, totalAmount, recievedMoney, changeList, isSuccessful)
+		payment.Summary(boughtProducts, totalAmount, receivedMoney, changeList, isSuccessful)
 
-		//if user type "exit" then program'll terminate
+		//if user type "exit" then program will terminate
 		//if user ENTER then user can shop again
 		var userContinue string
 		fmt.Println("\nPress ENTER key to continue shopping or type \"exit\" to exit program")

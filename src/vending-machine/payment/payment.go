@@ -24,7 +24,7 @@ func Payment(totalProductAmount int64, buyedProducts map[product.Product]int8, u
 	}
 
 	var (
-		recievedMoney = map[money.Money]int8{}
+		receivedMoney = map[money.Money]int8{}
 		totalPayment  int64
 		changeList    []money.Money
 		isSuccessful  = true
@@ -33,15 +33,15 @@ func Payment(totalProductAmount int64, buyedProducts map[product.Product]int8, u
 
 	fmt.Println("------------ Checkout ------------")
 	//print product details bought by the customer
-	product.PrintBuyedProdcut(buyedProducts)
+	product.PrintBoughtProduct(buyedProducts)
 
 	for {
 		//receive payment from user
-		totalPayment, recievedMoney = recievePayment(totalProductAmount, userInputPayment)
+		totalPayment, receivedMoney = receivePayment(totalProductAmount, userInputPayment)
 
 		//change the remaining money to the user
 		changeAmount := totalPayment - totalProductAmount
-		changeList, err = change(changeAmount, money.MoneyStock, recievedMoney)
+		changeList, err = change(changeAmount, money.MoneyStock, receivedMoney)
 		if err != nil {
 			fmt.Printf("%+v, press ENTER key to checkout again or type \"exit\" to cancel\n", err)
 
@@ -50,7 +50,7 @@ func Payment(totalProductAmount int64, buyedProducts map[product.Product]int8, u
 
 			if userContinueCheckout == "exit" {
 				isSuccessful = false
-				return recievedMoney, []money.Money{}, isSuccessful, nil
+				return receivedMoney, []money.Money{}, isSuccessful, nil
 			}
 		} else {
 			break
@@ -58,14 +58,25 @@ func Payment(totalProductAmount int64, buyedProducts map[product.Product]int8, u
 	}
 
 	//restock
-	product.DecreaseStock(buyedProducts)
-	money.IncreaseStock(recievedMoney)
-	money.DecreaseStock(changeList)
+	err = product.DecreaseStock(buyedProducts)
+	if err != nil {
+		return receivedMoney, []money.Money{}, false, err
+	}
 
-	return recievedMoney, changeList, isSuccessful, nil
+	err = money.IncreaseStock(receivedMoney)
+	if err != nil {
+		return receivedMoney, []money.Money{}, false, err
+	}
+
+	err = money.DecreaseStock(changeList)
+	if err != nil {
+		return receivedMoney, []money.Money{}, false, err
+	}
+
+	return receivedMoney, changeList, isSuccessful, nil
 }
 
-func recievePayment(totalProductAmount int64, userInputList ...*os.File) (int64, map[money.Money]int8) {
+func receivePayment(totalProductAmount int64, userInputList ...*os.File) (int64, map[money.Money]int8) {
 
 	//if userInput is not from file (for test purpose) then use from stdin instead
 	var userInput *os.File
@@ -76,7 +87,7 @@ func recievePayment(totalProductAmount int64, userInputList ...*os.File) (int64,
 	}
 
 	var paymentAmount int64
-	recievedMoney := make(map[money.Money]int8)
+	receivedMoney := make(map[money.Money]int8)
 
 	//loop until user pay more than total product's amount
 	for paymentAmount < totalProductAmount {
@@ -94,22 +105,22 @@ func recievePayment(totalProductAmount int64, userInputList ...*os.File) (int64,
 		}
 
 		//map recievedMoney for count the same money that user insert
-		moneyMap, ok := recievedMoney[money]
+		moneyMap, ok := receivedMoney[money]
 		if !ok {
-			recievedMoney[money] = 1
+			receivedMoney[money] = 1
 		} else {
-			recievedMoney[money] = moneyMap + 1
+			receivedMoney[money] = moneyMap + 1
 		}
 
-		//accumate the payment amount from user
+		//accumulate the payment amount from user
 		paymentAmount = paymentAmount + money.Value
 	}
 
-	return paymentAmount, recievedMoney
+	return paymentAmount, receivedMoney
 }
 
 //change - change the remaining money to the user
-func change(changeAmount int64, availableMoney []money.Money, recievedMoney map[money.Money]int8) ([]money.Money, error) {
+func change(changeAmount int64, availableMoney []money.Money, receivedMoney map[money.Money]int8) ([]money.Money, error) {
 
 	var changeList []money.Money
 	changeMoney := money.Money{}
@@ -120,7 +131,7 @@ func change(changeAmount int64, availableMoney []money.Money, recievedMoney map[
 
 	//add tmp money's stock from receiving money from user
 	for i, tmpAvailMoney := range tmpAvailableMoney {
-		for recMoney, amount := range recievedMoney {
+		for recMoney, amount := range receivedMoney {
 			if recMoney.Name == tmpAvailMoney.Name {
 				tmpAvailableMoney[i].Stock = tmpAvailMoney.Stock + int64(amount)
 			}
@@ -135,7 +146,7 @@ func change(changeAmount int64, availableMoney []money.Money, recievedMoney map[
 	for i, availMoney := range tmpAvailableMoney {
 		//if money's value enough for change and money's stock is greater than zero
 		if changeAmount-availMoney.Value >= 0 && availMoney.Stock > 0 {
-			//decrese remaing amount for change
+			//decrease remaining amount for change
 			changeAmount = changeAmount - availMoney.Value
 
 			//decrease tmp money's stock
@@ -155,7 +166,7 @@ func change(changeAmount int64, availableMoney []money.Money, recievedMoney map[
 		return []money.Money{}, errors.New("insufficient change")
 	}
 
-	//there is remaing amount for change the recursive
+	//there is remaining amount for change the recursive
 	if changeAmount != 0 {
 		otherChange, err := change(changeAmount, tmpAvailableMoney, map[money.Money]int8{})
 		if err != nil {
@@ -172,7 +183,7 @@ func change(changeAmount int64, availableMoney []money.Money, recievedMoney map[
 func Summary(buyedProducts map[product.Product]int8, totalAmount int64, receiveMoney map[money.Money]int8, changeList []money.Money, isSuccessful bool) {
 	fmt.Println("------------ Summary ------------")
 	//Product details bought by the customer
-	product.PrintBuyedProdcut(buyedProducts)
+	product.PrintBoughtProduct(buyedProducts)
 	fmt.Println("total price: ", totalAmount)
 
 	if isSuccessful {

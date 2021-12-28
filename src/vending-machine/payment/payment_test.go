@@ -444,7 +444,7 @@ func Test_recievePayment(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			actualPaymentAmount, actualRecieveMoney := recievePayment(test.input.totalAmount, userInput)
+			actualPaymentAmount, actualRecieveMoney := receivePayment(test.input.totalAmount, userInput)
 			if test.hasError {
 				assert.Error(t, err)
 				assert.Equal(t, test.expected.expectedError, err)

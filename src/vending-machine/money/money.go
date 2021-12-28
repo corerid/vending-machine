@@ -40,7 +40,7 @@ var MoneyStock = []Money{
 }
 
 func init() {
-	//sort descending AvailableMoney to prioritize the change from the most valuable amount to lowest
+	//sort descending AvailableMoney to prioritize the change from the most valuable amount to the lowest
 	//ex. 10 > 5 > 1
 	sort.Slice(MoneyStock, func(i, j int) bool {
 		return MoneyStock[i].Value > MoneyStock[j].Value
@@ -57,7 +57,7 @@ func ListAvailableMoney() {
 	fmt.Println("-----------------------------------")
 }
 
-//CheckMoney - for validate money is exist in stock or not
+//CheckMoney - for validate money is existed in stock or not
 func CheckMoney(moneyName string) (Money, error) {
 	for _, availMoney := range MoneyStock {
 		if moneyName == availMoney.Name {
@@ -67,9 +67,9 @@ func CheckMoney(moneyName string) (Money, error) {
 	return Money{}, errors.New("money doesn't excepted")
 }
 
-//IncreaseStock - increase global money's stock from recievedMoney map (money received from user)
-func IncreaseStock(recievedMoney map[Money]int8) error {
-	for recMoney, amount := range recievedMoney {
+//IncreaseStock - increase global money's stock from receivedMoney map (money received from user)
+func IncreaseStock(receivedMoney map[Money]int8) error {
+	for recMoney, amount := range receivedMoney {
 		for i, availMoney := range MoneyStock {
 			if recMoney.Name == availMoney.Name {
 				MoneyStock[i].Stock = MoneyStock[i].Stock + int64(amount)
@@ -80,7 +80,7 @@ func IncreaseStock(recievedMoney map[Money]int8) error {
 	return nil
 }
 
-//IncreaseStock - decrease global money's stock from changeList (money thaะ changed to user)
+//DecreaseStock - decrease global money's stock from changeList (money thaT changed to user)
 func DecreaseStock(changeList []Money) error {
 	for _, change := range changeList {
 		for i, availMoney := range MoneyStock {

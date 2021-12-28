@@ -62,9 +62,9 @@ func SelectProduct(userInput *os.File) (map[Product]int8, int64, error) {
 	tmpProductStock := make([]Product, len(ProductStock))
 	copy(tmpProductStock, ProductStock)
 
-	//loop for select product until user ENTER to checkout
+	//loop for select product until user ENTER for checkout
 	var totalAmount int64
-	buyedProducts := make(map[Product]int8)
+	boughtProducts := make(map[Product]int8)
 	fmt.Println("Please Select Product No: ")
 	for {
 		var selectedProduct string
@@ -73,8 +73,8 @@ func SelectProduct(userInput *os.File) (map[Product]int8, int64, error) {
 		//if user ENTER then finish the loop for next process (checkout)
 		if selectedProduct == "" {
 			//if user does not select any product then error (assume that user doesn't want to continue shopping)
-			if len(buyedProducts) == 0 {
-				return buyedProducts, 0, errors.New("you have not select any product")
+			if len(boughtProducts) == 0 {
+				return boughtProducts, 0, errors.New("you have not select any product")
 			}
 			break
 		}
@@ -90,18 +90,18 @@ func SelectProduct(userInput *os.File) (map[Product]int8, int64, error) {
 		//accumulate the price of the product selected by user
 		totalAmount = totalAmount + product.Price
 
-		//map buyedProducts for count the same product
-		productMap, ok := buyedProducts[product]
+		//map boughtProducts for count the same product
+		productMap, ok := boughtProducts[product]
 		if !ok {
-			buyedProducts[product] = 1
+			boughtProducts[product] = 1
 		} else {
-			buyedProducts[product] = productMap + 1
+			boughtProducts[product] = productMap + 1
 		}
 
 		fmt.Println("Press ENTER to checkout or continue select product")
 	}
 
-	return buyedProducts, totalAmount, nil
+	return boughtProducts, totalAmount, nil
 }
 
 //checkProduct - for check product no. from receiving product's stock is available or not
@@ -120,12 +120,12 @@ func checkProduct(productNo string, productStock []Product) (Product, error) {
 
 			//return and decrease stock of target product
 			productStock[i].Stock = productStock[i].Stock - 1
-			buyedProduct := Product{
+			boughtProduct := Product{
 				ProductNo: product.ProductNo,
 				Name:      product.Name,
 				Price:     product.Price,
 			}
-			return buyedProduct, nil
+			return boughtProduct, nil
 		}
 	}
 
@@ -134,9 +134,9 @@ func checkProduct(productNo string, productStock []Product) (Product, error) {
 
 //DecreaseStock - decrease global product's stock by buyedProducts map (products that user buy)
 func DecreaseStock(buyedProducts map[Product]int8) error {
-	for buyedProduct, amount := range buyedProducts {
+	for boughtProduct, amount := range buyedProducts {
 		for i, product := range ProductStock {
-			if buyedProduct.ProductNo == product.ProductNo {
+			if boughtProduct.ProductNo == product.ProductNo {
 				if ProductStock[i].Stock-amount < 0 {
 					return errors.New(product.Name + "'s stock is less than zero")
 				}
@@ -148,9 +148,9 @@ func DecreaseStock(buyedProducts map[Product]int8) error {
 	return nil
 }
 
-func PrintBuyedProdcut(buyedProducts map[Product]int8) {
+func PrintBoughtProduct(boughtProducts map[Product]int8) {
 	fmt.Printf("You've bought\n")
-	for product, value := range buyedProducts {
+	for product, value := range boughtProducts {
 		fmt.Printf("%+v price %+v for %+v piece", product.Name, product.Price, value)
 		if value > 1 {
 			fmt.Println("s")
