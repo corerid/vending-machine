@@ -41,7 +41,7 @@ func Payment(totalProductAmount int64, buyedProducts map[product.Product]int8, u
 
 		//change the remaining money to the user
 		changeAmount := totalPayment - totalProductAmount
-		changeList, err = change(changeAmount, money.AvailableMoney, recievedMoney)
+		changeList, err = change(changeAmount, money.MoneyStock, recievedMoney)
 		if err != nil {
 			fmt.Printf("%+v, press ENTER key to checkout again or type \"exit\" to cancel\n", err)
 

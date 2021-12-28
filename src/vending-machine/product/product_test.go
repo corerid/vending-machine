@@ -292,7 +292,7 @@ func Test_DecreaseStock(t *testing.T) {
 		{
 			description: "test_decrese_stock_success",
 			prepData: func() {
-				Products = []Product{
+				ProductStock = []Product{
 					{
 						ProductNo: 1,
 						Name:      "Sunbyte",
@@ -336,7 +336,7 @@ func Test_DecreaseStock(t *testing.T) {
 		{
 			description: "test_decrese_stock_failed_stock_is_less_than_zero",
 			prepData: func() {
-				Products = []Product{
+				ProductStock = []Product{
 					{
 						ProductNo: 1,
 						Name:      "Sunbyte",
@@ -389,7 +389,7 @@ func Test_DecreaseStock(t *testing.T) {
 				assert.Equal(t, test.expectedError, err)
 			} else {
 				assert.NoError(t, err)
-				assert.Equal(t, test.expected, Products)
+				assert.Equal(t, test.expected, ProductStock)
 			}
 		})
 	}

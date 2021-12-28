@@ -23,7 +23,7 @@ func Test_checkMoney(t *testing.T) {
 		{
 			description: "test_check_money_success",
 			prepData: func() {
-				AvailableMoney = []Money{
+				MoneyStock = []Money{
 					{
 						MoneyType: COIN,
 						Name:      "1",
@@ -52,7 +52,7 @@ func Test_checkMoney(t *testing.T) {
 		{
 			description: "test_check_money_failed_money_does_not_accepted",
 			prepData: func() {
-				AvailableMoney = []Money{
+				MoneyStock = []Money{
 					{
 						MoneyType: COIN,
 						Name:      "1",
@@ -102,7 +102,7 @@ func Test_IncreaseStock(t *testing.T) {
 		{
 			description: "test_increse_stock_success",
 			prepData: func() {
-				AvailableMoney = []Money{
+				MoneyStock = []Money{
 					{
 						MoneyType: COIN,
 						Name:      "1",
@@ -178,7 +178,7 @@ func Test_IncreaseStock(t *testing.T) {
 				assert.Error(t, err)
 			} else {
 				assert.NoError(t, err)
-				assert.Equal(t, test.expected, AvailableMoney)
+				assert.Equal(t, test.expected, MoneyStock)
 			}
 		})
 	}
@@ -196,7 +196,7 @@ func Test_DecreaseStock(t *testing.T) {
 		{
 			description: "test_decrese_stock_success",
 			prepData: func() {
-				AvailableMoney = []Money{
+				MoneyStock = []Money{
 					{
 						MoneyType: COIN,
 						Name:      "1",
@@ -286,7 +286,7 @@ func Test_DecreaseStock(t *testing.T) {
 		{
 			description: "test_decrese_stock_failed_stock_is_less_than_zero",
 			prepData: func() {
-				AvailableMoney = []Money{
+				MoneyStock = []Money{
 					{
 						MoneyType: COIN,
 						Name:      "1",
@@ -338,7 +338,7 @@ func Test_DecreaseStock(t *testing.T) {
 				assert.Equal(t, test.expectedError.Error(), err.Error())
 			} else {
 				assert.NoError(t, err)
-				assert.Equal(t, test.expected, AvailableMoney)
+				assert.Equal(t, test.expected, MoneyStock)
 			}
 		})
 	}

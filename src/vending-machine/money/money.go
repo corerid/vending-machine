@@ -18,35 +18,23 @@ type Money struct {
 	Stock     int64
 }
 
-var AvailableMoney = []Money{
+var MoneyStock = []Money{
 	{
 		MoneyType: COIN,
 		Name:      "1",
 		Value:     1,
-		Stock:     0,
+		Stock:     2,
 	},
 	{
 		MoneyType: COIN,
 		Name:      "5",
 		Value:     5,
-		Stock:     0,
+		Stock:     2,
 	},
 	{
 		MoneyType: COIN,
 		Name:      "10",
 		Value:     10,
-		Stock:     0,
-	},
-	{
-		MoneyType: BANK,
-		Name:      "20",
-		Value:     20,
-		Stock:     10,
-	},
-	{
-		MoneyType: BANK,
-		Name:      "50",
-		Value:     50,
 		Stock:     10,
 	},
 }
@@ -54,8 +42,8 @@ var AvailableMoney = []Money{
 func init() {
 	//sort descending AvailableMoney to prioritize the change from the most valuable amount to lowest
 	//ex. 10 > 5 > 1
-	sort.Slice(AvailableMoney, func(i, j int) bool {
-		return AvailableMoney[i].Value > AvailableMoney[j].Value
+	sort.Slice(MoneyStock, func(i, j int) bool {
+		return MoneyStock[i].Value > MoneyStock[j].Value
 	})
 }
 
@@ -63,7 +51,7 @@ func ListAvailableMoney() {
 	fmt.Println("List of money")
 	fmt.Println("MoneyType   Name        Value       Stock")
 	fmt.Println("------------------------------------------")
-	for _, money := range AvailableMoney {
+	for _, money := range MoneyStock {
 		fmt.Printf("%-12v%-12v%-12v%-12v\n", money.MoneyType, money.Name, money.Value, money.Stock)
 	}
 	fmt.Println("-----------------------------------")
@@ -71,7 +59,7 @@ func ListAvailableMoney() {
 
 //CheckMoney - for validate money is exist in stock or not
 func CheckMoney(moneyName string) (Money, error) {
-	for _, availMoney := range AvailableMoney {
+	for _, availMoney := range MoneyStock {
 		if moneyName == availMoney.Name {
 			return availMoney, nil
 		}
@@ -82,9 +70,9 @@ func CheckMoney(moneyName string) (Money, error) {
 //IncreaseStock - increase global money's stock from recievedMoney map (money received from user)
 func IncreaseStock(recievedMoney map[Money]int8) error {
 	for recMoney, amount := range recievedMoney {
-		for i, availMoney := range AvailableMoney {
+		for i, availMoney := range MoneyStock {
 			if recMoney.Name == availMoney.Name {
-				AvailableMoney[i].Stock = AvailableMoney[i].Stock + int64(amount)
+				MoneyStock[i].Stock = MoneyStock[i].Stock + int64(amount)
 				break
 			}
 		}
@@ -95,12 +83,12 @@ func IncreaseStock(recievedMoney map[Money]int8) error {
 //IncreaseStock - decrease global money's stock from changeList (money thaะ changed to user)
 func DecreaseStock(changeList []Money) error {
 	for _, change := range changeList {
-		for i, availMoney := range AvailableMoney {
+		for i, availMoney := range MoneyStock {
 			if change.Name == availMoney.Name {
-				if AvailableMoney[i].Stock-1 < 0 {
+				if MoneyStock[i].Stock-1 < 0 {
 					return errors.New(availMoney.Name + "'s stock is less than zero")
 				}
-				AvailableMoney[i].Stock = AvailableMoney[i].Stock - 1
+				MoneyStock[i].Stock = MoneyStock[i].Stock - 1
 				break
 			}
 		}

@@ -14,7 +14,7 @@ type Product struct {
 	Stock     int8
 }
 
-var Products = []Product{
+var ProductStock = []Product{
 	{
 		ProductNo: 1,
 		Name:      "Lays",
@@ -45,7 +45,7 @@ func ListAllProducts() {
 	fmt.Println("List of products")
 	fmt.Println("No        Name      Price     Stock")
 	fmt.Println("-----------------------------------")
-	for _, product := range Products {
+	for _, product := range ProductStock {
 		fmt.Printf("%-10v%-10v%-10v%-10v\n", product.ProductNo, product.Name, product.Price, product.Stock)
 	}
 	fmt.Println("-----------------------------------")
@@ -59,8 +59,8 @@ func SelectProduct(userInput *os.File) (map[Product]int8, int64, error) {
 	}
 
 	//create tmpProductStock from product's stock because we'll change the real stock when everything is success
-	tmpProductStock := make([]Product, len(Products))
-	copy(tmpProductStock, Products)
+	tmpProductStock := make([]Product, len(ProductStock))
+	copy(tmpProductStock, ProductStock)
 
 	//loop for select product until user ENTER to checkout
 	var totalAmount int64
@@ -135,12 +135,12 @@ func checkProduct(productNo string, productStock []Product) (Product, error) {
 //DecreaseStock - decrease global product's stock by buyedProducts map (products that user buy)
 func DecreaseStock(buyedProducts map[Product]int8) error {
 	for buyedProduct, amount := range buyedProducts {
-		for i, product := range Products {
+		for i, product := range ProductStock {
 			if buyedProduct.ProductNo == product.ProductNo {
-				if Products[i].Stock-amount < 0 {
+				if ProductStock[i].Stock-amount < 0 {
 					return errors.New(product.Name + "'s stock is less than zero")
 				}
-				Products[i].Stock = Products[i].Stock - amount
+				ProductStock[i].Stock = ProductStock[i].Stock - amount
 				break
 			}
 		}

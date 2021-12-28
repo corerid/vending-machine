@@ -39,7 +39,7 @@ func Test_Payment(t *testing.T) {
 		{
 			description: "test_payment_success",
 			prepData: func() {
-				money.AvailableMoney = []money.Money{
+				money.MoneyStock = []money.Money{
 					{
 						MoneyType: money.COIN,
 						Name:      "10",
@@ -61,11 +61,11 @@ func Test_Payment(t *testing.T) {
 				}
 
 				//sort descending input available money first for prioritize chage
-				sort.Slice(money.AvailableMoney, func(i, j int) bool {
-					return money.AvailableMoney[i].Value > money.AvailableMoney[j].Value
+				sort.Slice(money.MoneyStock, func(i, j int) bool {
+					return money.MoneyStock[i].Value > money.MoneyStock[j].Value
 				})
 
-				product.Products = []product.Product{
+				product.ProductStock = []product.Product{
 					{
 						ProductNo: 3,
 						Name:      "Kitkat",
@@ -150,7 +150,7 @@ func Test_Payment(t *testing.T) {
 		{
 			description: "test_payment_success_with_insufficient_change",
 			prepData: func() {
-				money.AvailableMoney = []money.Money{
+				money.MoneyStock = []money.Money{
 					{
 						MoneyType: money.COIN,
 						Name:      "10",
@@ -172,11 +172,11 @@ func Test_Payment(t *testing.T) {
 				}
 
 				//sort descending input available money first for prioritize chage
-				sort.Slice(money.AvailableMoney, func(i, j int) bool {
-					return money.AvailableMoney[i].Value > money.AvailableMoney[j].Value
+				sort.Slice(money.MoneyStock, func(i, j int) bool {
+					return money.MoneyStock[i].Value > money.MoneyStock[j].Value
 				})
 
-				product.Products = []product.Product{
+				product.ProductStock = []product.Product{
 					{
 						ProductNo: 1,
 						Name:      "Lays",
@@ -289,8 +289,8 @@ func Test_Payment(t *testing.T) {
 			for k := range actualRecievedMoney {
 				assert.Equal(t, test.expected.expectedRecievedMoney[k], actualRecievedMoney[k])
 			}
-			assert.Equal(t, test.expected.expectedProductStock, product.Products)
-			assert.Equal(t, test.expected.expectedMoneyStock, money.AvailableMoney)
+			assert.Equal(t, test.expected.expectedProductStock, product.ProductStock)
+			assert.Equal(t, test.expected.expectedMoneyStock, money.MoneyStock)
 			assert.Equal(t, test.expected.expectedIsSuccessful, actualIsSuccessful)
 
 		})
@@ -319,7 +319,7 @@ func Test_recievePayment(t *testing.T) {
 		{
 			description: "test_recieve_payment_success",
 			prepData: func() {
-				money.AvailableMoney = []money.Money{
+				money.MoneyStock = []money.Money{
 					{
 						MoneyType: money.COIN,
 						Name:      "1",
@@ -372,7 +372,7 @@ func Test_recievePayment(t *testing.T) {
 		{
 			description: "test_recieve_payment_success_with_money_does_not_excepted",
 			prepData: func() {
-				money.AvailableMoney = []money.Money{
+				money.MoneyStock = []money.Money{
 					{
 						MoneyType: money.COIN,
 						Name:      "1",
